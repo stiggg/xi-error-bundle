@@ -1,7 +1,21 @@
 parameters:
-#    xi_error.example.class: Xi\Bundle\ErrorBundle\Example
+    symfony.monolog.logger.class: Symfony\Bridge\Monolog\Logger
+    monolog.streamhandler.class: Monolog\Handler\StreamHandler
+    xi.eventlistener.exception.class: EventListener\ExceptionEventListener
 
 services:
-#    xi_error.example:
-#        class: %xi_error.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    xi.exception_logger:
+        class: %symfony.monolog.logger.class%
+        arguments: [app]
+        calls:
+            - [pushHandler, [@xi.exception_logger_handler]]
+
+    xi.exception_logger_handler:
+        class: %monolog.streamhandler.class%
+        arguments: [%kernel.logs_dir%/exception.%kernel.environment%.log, 200]
+
+    kernel.listener.exception_listener:
+        class: %xi.eventlistener.exception.class%
+        arguments: [@xi.exception_logger, @kernel]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
