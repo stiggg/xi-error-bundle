@@ -83,28 +83,6 @@ class ExceptionEventListenerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
-     */
-    public function getExceptionMessageForEnvironmentShouldReturnRightMessageDependingOnEnvironment()
-    {
-        $detailedExceptionMessage = 'very detailed exception message';
-        $generalExceptionMessage = 'internal error';
-        $e = new Exception($detailedExceptionMessage, 500);
-
-        $this->assertEquals(
-            $detailedExceptionMessage,
-            $this->listener->getExceptionMessageForEnvironment($e, $generalExceptionMessage)
-        );
-
-        $this->assertEquals(
-            $generalExceptionMessage,
-            $this->listener->getExceptionMessageForEnvironment(
-                $e, $generalExceptionMessage, array()
-            )
-        );
-    }
-
-    /**
      * @return KernelInterface
      */
     public function getContainer()
