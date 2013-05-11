@@ -15,33 +15,67 @@ use Closure;
  */
 class Asserter
 {
-    public static function assertAndLog(
-        Closure $callback,
-        $params,
-        $message,
-        LoggerInterface $logger
-    ) {
-        if (!call_user_func_array($callback, $params)) {
-            $logger->error($message);
-
-            throw new AssertException($message);
-        }
-    }
-
     /**
      *
      * @param callable $callback
      * @param array $params
      * @param string $message
+     * @param LoggerInterface $logger Optional logger
      * @throws AssertException
      */
-    public static function assert(
-        callable $callback,
+    public static function callback(
+        $callback,
         $params,
-        $message
+        $message,
+        LoggerInterface $logger = null
     ) {
-        if (!call_user_func_array($callback, $params)) {
-            throw new AssertException($message);
+        if (is_callable($callback)) {
+            $passed = call_user_func_array($callback, $params);
+        } else {
+            throw new LogicException('First parameter should be callable.');
         }
+
+        return self::handler($passed, $message, $logger);
+    }
+
+    /**
+     *
+     * @param boolean $assertion
+     * @param string $message
+     * @param LoggerInterface $logger
+     * @return true
+     */
+    public static function true(
+        $assertion,
+        $message,
+        LoggerInterface $logger = null
+    ) {
+        return self::handler($assertion, $message, $logger);
+    }
+
+    /**
+     *
+     * @param boolean $passed
+     * @param string $message
+     * @param LoggerInterface $logger
+     * @return true
+     * @throws AssertException
+     */
+    private static function handler(
+        $passed,
+        $message,
+        LoggerInterface $logger = null
+    ) {
+        $e = new AssertException($message);
+
+        if (!$passed && $logger !== null) {
+            $logger->error($e);
+        }
+
+        if (!$passed) {
+            throw $e;
+        }
+
+        return $passed;
     }
 }

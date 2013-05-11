@@ -80,6 +80,8 @@ class ExceptionEventListenerTest extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch('kernel.exception', $event);
 
         $this->assertTrue(file_exists($this->exceptionLogPath));
+
+        unlink($this->exceptionLogPath);
     }
 
     /**

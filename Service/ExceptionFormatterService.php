@@ -7,25 +7,25 @@ use Exception;
 use AppKernel;
 
 /**
- * Format exceptions according to environment.
+ * Service for exception formatter.
  *
  * @author Sami Tikka <stikka@iki.fi>
  */
-class ExceptionFormatter
+class ExceptionFormatterService
 {
     /**
      *
-     * @var AppKernel
+     * @var string
      */
-    private $kernel;
+    private $environment;
 
     /**
      *
      * @param AppKernel $kernel
      */
-    public function __construct(AppKernel $kernel)
+    public function __construct($environment)
     {
-        $this->kernel = $kernel;
+        $this->environment = $environment;
     }
 
     /**
@@ -44,7 +44,7 @@ class ExceptionFormatter
         return ExceptionFormatter::formatMessage(
             $e,
             $defaultMessage,
-            $this->kernel->getEnvironment(),
+            $this->environment,
             array('test', 'dev')
         );
     }

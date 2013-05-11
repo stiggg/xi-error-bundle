@@ -21,6 +21,16 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
+    xi_error.assertion_logger:
+        class: %symfony.monolog.logger.class%
+        arguments: [app]
+        calls:
+            - [pushHandler, [@xi_error.assertion_logger_handler]]
+
+    xi_error.assertion_logger_handler:
+        class: %monolog.streamhandler.class%
+        arguments: [%kernel.logs_dir%/assertion.%kernel.environment%.log, 200]
+
     xi_error.exception_formatter:
         class: %xi_error.exception_formatter.class%
-        arguments: [app]
+        arguments: [%kernel.environment%]
