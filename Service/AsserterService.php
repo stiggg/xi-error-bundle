@@ -4,8 +4,6 @@ namespace Xi\Bundle\ErrorBundle\Service;
 
 use Xi\Bundle\ErrorBundle\Component\Asserter;
 use Psr\Log\LoggerInterface;
-use Exception;
-use AppKernel;
 
 /**
  * Asserter service.

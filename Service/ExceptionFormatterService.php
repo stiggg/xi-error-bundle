@@ -4,7 +4,6 @@ namespace Xi\Bundle\ErrorBundle\Service;
 
 use Xi\Bundle\ErrorBundle\Component\ExceptionFormatter;
 use Exception;
-use AppKernel;
 
 /**
  * Service for exception formatter.
@@ -21,7 +20,7 @@ class ExceptionFormatterService
 
     /**
      *
-     * @param AppKernel $kernel
+     * @param string $environment
      */
     public function __construct($environment)
     {

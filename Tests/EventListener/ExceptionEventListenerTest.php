@@ -3,7 +3,6 @@
 namespace Xi\Bundle\ErrorBundle\Tests\EventListener;
 
 use PHPUnit_Framework_TestCase;
-use AppKernel;
 use Exception;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -11,20 +10,13 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Xi\Bundle\ErrorBundle\EventListener\ExceptionEventListener;
-
-require_once($_SERVER['KERNEL_DIR'] . "/AppKernel.php");
+use Xi\Bundle\ErrorBundle\Tests\TestMocker;
 
 /**
  * @author Sami Tikka <stikka@iki.fi>
  */
-class ExceptionEventListenerTest extends PHPUnit_Framework_TestCase
+class ExceptionEventListenerTest extends TestMocker
 {
-    /**
-     *
-     * @var string
-     */
-    var $exceptionLogPathPath;
-
     /**
      *
      * @var ExceptionEventListener
@@ -32,9 +24,9 @@ class ExceptionEventListenerTest extends PHPUnit_Framework_TestCase
     var $listener;
 
     /**
-     * @var Container
+     * @var LoggerInterface
      */
-    private $container;
+    private $logger;
 
     /**
      *
@@ -44,21 +36,14 @@ class ExceptionEventListenerTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $kernel = new AppKernel('test', true);
-        $kernel->boot();
+        $this->kernel = $this->getKernelMock();
 
-        $this->kernel = $kernel;
+        $this->logger = $this->getLoggerInterfaceMock();
 
-        $this->container = $kernel->getContainer();
-
-        $exceptionLogPath = $_SERVER['KERNEL_DIR'] . '/logs/exception.test.log';
-        if (file_exists($exceptionLogPath)) {
-            unlink($exceptionLogPath);
-        }
-
-        $this->exceptionLogPath = $exceptionLogPath;
-
-        $this->listener = $this->container->get('kernel.listener.exception_listener');
+        $this->listener = new ExceptionEventListener(
+            $this->logger,
+            $this->kernel
+        );
     }
 
     /**
@@ -70,33 +55,16 @@ class ExceptionEventListenerTest extends PHPUnit_Framework_TestCase
 
         $dispatcher->addListener('kernel.exception', array($this->listener, 'onKernelException'));
 
-        $kernel = $this->getKernel();
         $event = new GetResponseForExceptionEvent(
-            $kernel,
+            $this->kernel,
             (new Request()),
             HttpKernelInterface::MASTER_REQUEST,
             (new Exception('failure is inevitable', 500))
         );
+
+        $this->logger->expects($this->once())
+            ->method('error');
+
         $dispatcher->dispatch('kernel.exception', $event);
-
-        $this->assertTrue(file_exists($this->exceptionLogPath));
-
-        unlink($this->exceptionLogPath);
-    }
-
-    /**
-     * @return KernelInterface
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * @return Container
-     */
-    public function getKernel()
-    {
-        return $this->kernel;
     }
 }
