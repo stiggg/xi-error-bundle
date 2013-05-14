@@ -28,7 +28,7 @@ class ExceptionEventListenerTest extends TestMocker
 
     /**
      *
-     * @var KernelInterface
+     * @var HttpKernelInterface
      */
     private $kernel;
 

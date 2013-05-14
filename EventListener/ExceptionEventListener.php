@@ -2,7 +2,7 @@
 
 namespace Xi\Bundle\ErrorBundle\EventListener;
 
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Psr\Log\LoggerInterface;
 
@@ -21,16 +21,16 @@ class ExceptionEventListener
 
     /**
      *
-     * @var KernelInterface
+     * @var HttpKernelInterface
      */
     private $kernel;
 
     /**
      *
      * @param LoggerInterface $logger
-     * @param KernelInterface $kernel
+     * @param HttpKernelInterface $kernel
      */
-    public function __construct(LoggerInterface $logger, KernelInterface $kernel)
+    public function __construct(LoggerInterface $logger, HttpKernelInterface $kernel)
     {
         $this->logger = $logger;
         $this->kernel = $kernel;
