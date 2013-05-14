@@ -2,15 +2,13 @@
 
 namespace Xi\Bundle\ErrorBundle\Tests\EventListener;
 
-use PHPUnit_Framework_TestCase;
-use Exception;
-use Symfony\Component\DependencyInjection\Container;
+use Xi\Bundle\ErrorBundle\EventListener\ExceptionEventListener;
+use Xi\Bundle\ErrorBundle\Tests\TestMocker;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Xi\Bundle\ErrorBundle\EventListener\ExceptionEventListener;
-use Xi\Bundle\ErrorBundle\Tests\TestMocker;
+use Exception;
 
 /**
  * @author Sami Tikka <stikka@iki.fi>
