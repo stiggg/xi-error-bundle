@@ -4,9 +4,7 @@ namespace Xi\Bundle\ErrorBundle\EventListener;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
-use Exception;
 
 /**
  * Listens kernel exceptions and logs them to environment specific files.
