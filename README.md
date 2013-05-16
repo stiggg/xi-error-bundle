@@ -16,7 +16,7 @@ So add to your composer.json:
 
 ## Exception logging
 
-Include XiErrorBundle in your AppKernel.php:
+Just include XiErrorBundle in your AppKernel.php, and you get automatic exception logging into into %kernel.logs_dir%/exception.%kernel.environment%.log:
 
 ```php
 <?php
@@ -25,14 +25,12 @@ Include XiErrorBundle in your AppKernel.php:
     {
         $bundles = array(
         ...
-            new Ornicar\ApcBundle\OrnicarApcBundle(),
+            new Xi\Bundle\ErrorBundle\XiErrorBundle()
         ...
         );
     }
 ...
 ```
-
-Default service creates exception log into %kernel.logs_dir%/exception.%kernel.environment%.log.
 
 ### Why use separate exception logging?
 
@@ -46,27 +44,26 @@ This component is especially useful, when you need to show the user the result o
 
 In your controller / service:
 
+```php
+<?php
 
-    <?php
+try {
+    throw new Exception(sprintf('detailed exception message: we died because database said "%s"', 'could not connect'));
+} catch (Exception $e) {
 
-    ...
+    # you can either use the service...
+    $service = $this->get('xi_error.exception_formatter');
+    $message = $service->formatMessage($e, 'general exception message: could not process your form, please try again');
 
-    try {
-        throw new Exception(sprintf('we died because database said "%s"', 'could not connect'));
-    } catch (Exception $e) {
+    # ...or use the component directly
+    #$message = \Xi\Bundle\ErrorBundle\Component\ExceptionFormatter::formatMessage(
+    #    $e,
+    #    'could not process your form, please try again',
+    #    $this->get('kernel')->getEnvironment()
+    #);
 
-        # you can either use the service...
-        $service = $this->get('xi_error.exception_formatter');
-        $message = $service->formatMessage($e, 'could not process your form, please try again');
+    return $message;
+}
+```
 
-        # ...or use the component directly
-        #$message = \Xi\Bundle\ErrorBundle\Component\ExceptionFormatter::formatMessage(
-        #    $e,
-        #    'could not process your form, please try again',
-        #    $this->get('kernel')->getEnvironment()
-        #);
-
-        return $message;
-    }
-
-By default, the user sees the original exception message when in "testing" or "development" environment, and some more general error message in "production".
+By default, the user sees the original exception message when in "test" or "dev" environment, and some more general error message in other environments.
