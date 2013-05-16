@@ -2,7 +2,7 @@ parameters:
     symfony.monolog.logger.class: Symfony\Bridge\Monolog\Logger
     monolog.streamhandler.class: Monolog\Handler\StreamHandler
     xi_error.eventlistener.exception.class: Xi\Bundle\ErrorBundle\EventListener\ExceptionEventListener
-    xi_error.exception_formatter.class: Xi\Bundle\ErrorBundle\Service\ExceptionFormatter
+    xi_error.exception_formatter.class: Xi\Bundle\ErrorBundle\Service\ExceptionFormatterService
 
 services:
     xi_error.exception_logger:
