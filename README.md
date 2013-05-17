@@ -6,17 +6,17 @@ Logging requires any PSR-3 compatible logger.
 
 ## Installation
 
-Works with PHP 5.3.x. If you are using Symfony2 services, Symfony requires atleast Monolog 1.3 or greater and compatible Monolog bridge, since that's the first PSR-3 compatible version.
+Requires:
 
-So add to your composer.json:
+* PHP >=5.3
+* Symfony >=2.1
+* Monolog >= 1.3
 
-> "require": {
->   "monolog/monolog": ">=1.3.0",
-> }
+Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since that's the first PSR-3 compatible version.
 
 ## Exception logging
 
-Just include XiErrorBundle in your AppKernel.php, and you get automatic exception logging into into %kernel.logs_dir%/exception.%kernel.environment%.log:
+Just include XiErrorBundle in your AppKernel.php, and you get automatic exception logging. Logs are created in <kernel.logs_dir>/exception.<kernel.environment>.log.
 
 ```php
 <?php
@@ -67,3 +67,10 @@ try {
 ```
 
 By default, the user sees the original exception message when in "test" or "dev" environment, and some more general error message in other environments.
+
+## Assertions
+
+This bundle includes assertion component & service. Component can be used on it's own, service does automatic assertion logging.
+
+### Why use separate assertion logging?
+
