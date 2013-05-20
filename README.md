@@ -18,7 +18,7 @@ Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since 
 
 ## Exception logging
 
-Include XiErrorBundle in your AppKernel.php, and you get automatic exception logging. Logs are created in *%kernel.logs_dir%**/exception.**%kernel.environment%**.log***.
+Include XiErrorBundle in your AppKernel.php, and you get automatic exception logging. Logs are created in *%kernel.logs_dir%/exception.%kernel.environment%.log*.
 
 ```php
 <?php
@@ -103,4 +103,4 @@ Equivalent component static methods:
 
 Optional LoggerInterface parameter takes a PSR-3 compatible logger.
 
-Logs are created in *%kernel.logs_dir%**/assert.**%kernel.environment%**.log***.
+Logs are created in *%kernel.logs_dir%/assert.%kernel.environment%.log*.
