@@ -4,17 +4,21 @@ This is a Symfony2 bundle for error and exception handling and logging. It also 
 
 ## Installation
 
-Requires:
-
+This bundle requires:
 * PHP >=5.3
 * Symfony >=2.1
 * Monolog >= 1.3
+
+Add to composer.json:
+
+    "monolog/monolog": ">=1.3.0",
+    "xi/error-bundle": "dev-master"
 
 Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since that's the first PSR-3 compatible version.
 
 ## Exception logging
 
-Include XiErrorBundle in your AppKernel.php, and you get automatic exception logging. Logs are created in <kernel.logs_dir>/exception.<kernel.environment>.log.
+Include XiErrorBundle in your AppKernel.php, and you get automatic exception logging. Logs are created in *%kernel.logs_dir%**/exception.**%kernel.environment%**.log***.
 
 ```php
 <?php
@@ -36,9 +40,7 @@ Default Symfony2 logs have lots of other stuff, that does not help much with deb
 
 ## Exception message formatting
 
-During development, you want to see exactly what went wrong. In production on the other hand, you don't want to show the actual, possibly very detailed exception message. Exception message formatter component/service takes an exception, and returns the detailed or the general error message *depending on the current environment*.
-
-Possible use case for this component is, when you need to show the user the result of some operation, like processing user form:
+During development, you want to see exactly what went wrong. In production on the other hand, you don't want to show the actual, possibly very detailed exception message. Exception message formatter component/service takes an exception, and returns the detailed or the general error message *depending on the current environment*. By default, the original exception message is intended to be shown to developer in **"test"** or **"dev"** environment, and end-user sees some more general error message in other environments.
 
 ```php
 <?php
@@ -63,8 +65,6 @@ Possible use case for this component is, when you need to show the user the resu
 }
 ```
 
-By default, the developer sees the original exception message when in "test" or "dev" environment, and end-user sees some more general error message in other environments.
-
 ## Assertions
 
 This bundle includes assertion component & service. The component can be used on it's own. The service does automatic assertion logging.
@@ -76,6 +76,7 @@ Design principle of this assertion component differs from PHP's own assert, whic
 ```php
 <?php
 
+    ...
     $message = sprintf('failed asserting that "%s" is more than 9', $number);
 
     # use the service with logging...
@@ -88,13 +89,18 @@ Design principle of this assertion component differs from PHP's own assert, whic
     #\Xi\Bundle\ErrorBundle\Component\Asserter::true($number > 8, $message);
 
     # continue as normal
+    ...
 }
 ```
 
-Assertation methods are:
-* assertCallback($callback, $callbackParameterArray, $assertationMessage)
-* true($condition, $assertationMessage)
+Service methods are:
+* assertCallback(callable $callback, array $callbackParameterArray, string $assertationMessage)
+* assertTrue(mixed $assertion, string $assertationMessage)
 
-Component methods also take an optional third parameter, which should be a PSR-3 compatible logger interface.
+Equivalent component static methods:
+* callback(callable $callback, array $callbackParameterArray, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
+* true(mixed $assertion, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
 
-Logs are created in <kernel.logs_dir>/assert.<kernel.environment>.log.
+Optional LoggerInterface parameter takes a PSR-3 compatible logger.
+
+Logs are created in *%kernel.logs_dir%**/assert.**%kernel.environment%**.log***.
