@@ -1,8 +1,6 @@
 # xi-error-bundle
 
-This is a Symfony2 bundle for error and exception handling and logging. It also includes components for asserting and formatting the exception messages according to environment.
-
-Logging requires any PSR-3 compatible logger.
+This is a Symfony2 bundle for error and exception handling and logging. It also includes assertion component/service and component/service for formatting user readable exception messages according to environment.
 
 ## Installation
 
@@ -16,7 +14,7 @@ Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since 
 
 ## Exception logging
 
-Just include XiErrorBundle in your AppKernel.php, and you get automatic exception logging. Logs are created in <kernel.logs_dir>/exception.<kernel.environment>.log.
+Include XiErrorBundle in your AppKernel.php, and you get automatic exception logging. Logs are created in <kernel.logs_dir>/exception.<kernel.environment>.log.
 
 ```php
 <?php
@@ -38,39 +36,65 @@ Default Symfony2 logs have lots of other stuff, that does not help much with deb
 
 ## Exception message formatting
 
-During development, you want to see exactly what went wrong. In production on the other hand, you don't want to show the actual, possibly very detailed exception message. Exception message formatter component/service takes an exception, and returns the detailed or the general error message depending on current environment.
+During development, you want to see exactly what went wrong. In production on the other hand, you don't want to show the actual, possibly very detailed exception message. Exception message formatter component/service takes an exception, and returns the detailed or the general error message *depending on the current environment*.
 
-This component is especially useful, when you need to show the user the result of some Ajax call. You can format the message in server, and see appropriate message depending on the environment.
-
-In your controller / service:
+Possible use case for this component is, when you need to show the user the result of some operation, like processing user form:
 
 ```php
 <?php
 
-try {
-    throw new Exception(sprintf('detailed exception message: we died because database said "%s"', 'could not connect'));
-} catch (Exception $e) {
+    try {
+        $this->em->persist($user);
+        $this->em->flush();
+    } catch (Exception $e) {
+        # use the service...
+        $service = $this->get('xi_error.exception_formatter');
+        $message = $service->formatMessage($e, 'could not process your form, please try again');
 
-    # you can either use the service...
-    $service = $this->get('xi_error.exception_formatter');
-    $message = $service->formatMessage($e, 'general exception message: could not process your form, please try again');
+        # ...or the component directly
+        #$message = \Xi\Bundle\ErrorBundle\Component\ExceptionFormatter::formatMessage(
+        #    $e,
+        #    'could not process your form, please try again',
+        #    $this->get('kernel')->getEnvironment()
+        #);
+    }
 
-    # ...or use the component directly
-    #$message = \Xi\Bundle\ErrorBundle\Component\ExceptionFormatter::formatMessage(
-    #    $e,
-    #    'could not process your form, please try again',
-    #    $this->get('kernel')->getEnvironment()
-    #);
-
-    return $message;
+    return new Response($message);
 }
 ```
 
-By default, the user sees the original exception message when in "test" or "dev" environment, and some more general error message in other environments.
+By default, the developer sees the original exception message when in "test" or "dev" environment, and end-user sees some more general error message in other environments.
 
 ## Assertions
 
-This bundle includes assertion component & service. Component can be used on it's own, service does automatic assertion logging.
+This bundle includes assertion component & service. The component can be used on it's own. The service does automatic assertion logging.
 
 ### Why use separate assertion logging?
 
+Design principle of this assertion component differs from PHP's own assert, which is recommended to be used during development. If you code your application so, that behind some point in the execution path you expect input data to be logically coherent and sanitized, use assertions to enforce it. Assertation component throws exception when abnormal conditions are encountered.
+
+```php
+<?php
+
+    $message = sprintf('failed asserting that "%s" is more than 9', $number);
+
+    # use the service with logging...
+    $service = $this->get('xi_error.asserter_service');
+    $service->assertCallback(function($number) {
+        return $number > 9 ? true : false;
+    }, array($number), $message);
+
+    # ...or the component directly, no logging
+    #\Xi\Bundle\ErrorBundle\Component\Asserter::true($number > 8, $message);
+
+    # continue as normal
+}
+```
+
+Assertation methods are:
+* assertCallback($callback, $callbackParameterArray, $assertationMessage)
+* true($condition, $assertationMessage)
+
+Component methods also take an optional third parameter, which should be a PSR-3 compatible logger interface.
+
+Logs are created in <kernel.logs_dir>/assert.<kernel.environment>.log.
