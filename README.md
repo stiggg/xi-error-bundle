@@ -44,7 +44,7 @@ During development, you want to see exactly what went wrong. In production on th
 
 ```php
 <?php
-
+    ...
     try {
         $this->em->persist($user);
         $this->em->flush();
@@ -62,14 +62,14 @@ During development, you want to see exactly what went wrong. In production on th
     }
 
     return new Response($message);
-}
+    ...
 ```
 
 ## Assertions
 
 This bundle includes assertion component & service. The component can be used on it's own. The service does automatic assertion logging.
 
-### Why use separate assertion logging?
+### Design
 
 Design principle of this assertion component differs from PHP's own assert, which is recommended to be used during development. If you code your application so, that behind some point in the execution path you expect input data to be logically coherent and sanitized, use assertions to enforce it. Assertation component throws exception when abnormal conditions are encountered.
 
@@ -90,10 +90,22 @@ Design principle of this assertion component differs from PHP's own assert, whic
 
     # continue as normal
     ...
-}
+
 ```
 
-Service methods are:
+There's only two assertations, "callback" or "true". This is to avoid doing specific assertation methods (like for integer, regexp etc.), because you can always do it yourself and just the way you like:
+
+```php
+<?php
+    $number = '10';
+    \Xi\Bundle\ErrorBundle\Component\Asserter::true(is_numeric('10'), $number . ' was not numeric');
+
+    $regexp = '/ex/';
+    $haystack = 'regexp';
+    \Xi\Bundle\ErrorBundle\Component\Asserter::true(preg_match($regexp, $haystack), sprintf('"%s" did not match regexp "%s"', $haystack, $regexp));
+```
+
+Service methods:
 * assertCallback(callable $callback, array $callbackParameterArray, string $assertationMessage)
 * assertTrue(mixed $assertion, string $assertationMessage)
 
