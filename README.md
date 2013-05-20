@@ -67,11 +67,9 @@ During development, you want to see exactly what went wrong. In production on th
 
 ## Assertions
 
-This bundle includes assertion component & service. The component can be used on it's own. The service does automatic assertion logging.
+*"Use assertions to document assumptions made in the code and to flush out unexpected conditions."* --Steve McConnell
 
-### Design
-
-Design principle of this assertion component differs from PHP's own assert, which is recommended to be used during development. If you code your application so, that behind some point in the execution path you expect input data to be logically coherent and sanitized, use assertions to enforce it. Assertation component throws exception when abnormal conditions are encountered.
+This bundle includes assertion component & service. The component can be used on it's own. The service wraps component and does automatic assertion logging. Assertation component throws exception when abnormal conditions are encountered.
 
 ```php
 <?php
@@ -107,11 +105,11 @@ There's only two assertations, "callback" or "true". This is to avoid doing spec
 
 Service methods:
 * assertCallback(callable $callback, array $callbackParameterArray, string $assertationMessage)
-* assertTrue(mixed $assertion, string $assertationMessage)
+* assertTrue(boolean $assertion, string $assertationMessage)
 
 Equivalent component static methods:
 * callback(callable $callback, array $callbackParameterArray, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
-* true(mixed $assertion, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
+* true(boolean $assertion, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
 
 Optional LoggerInterface parameter takes a PSR-3 compatible logger.
 
