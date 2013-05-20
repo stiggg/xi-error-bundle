@@ -4,6 +4,7 @@ namespace Xi\Bundle\ErrorBundle\Tests\EventListener;
 
 use Xi\Bundle\ErrorBundle\EventListener\ExceptionEventListener;
 use Xi\Bundle\ErrorBundle\Tests\TestMocker;
+use Xi\Bundle\ErrorBundle\Exception\AssertException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,19 +50,36 @@ class ExceptionEventListenerTest extends TestMocker
      */
     public function shouldCatchException()
     {
+        $this->dispatchException();
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotCatchAssertationException()
+    {
+        $this->logger->expects($this->never())
+            ->method('error');
+
+        $exception = new AssertException('Failed to identify pike as a fish');
+        $this->dispatchException($exception);
+    }
+
+    private function dispatchException($exception = null)
+    {
         $dispatcher = new EventDispatcher();
 
         $dispatcher->addListener('kernel.exception', array($this->listener, 'onKernelException'));
 
+        if ($exception == null) {
+            $exception = new Exception('failure is inevitable', 500);
+        }
         $event = new GetResponseForExceptionEvent(
             $this->kernel,
             (new Request()),
             HttpKernelInterface::MASTER_REQUEST,
-            (new Exception('failure is inevitable', 500))
+            $exception
         );
-
-        $this->logger->expects($this->once())
-            ->method('error');
 
         $dispatcher->dispatch('kernel.exception', $event);
     }
