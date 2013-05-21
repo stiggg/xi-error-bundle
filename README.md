@@ -91,7 +91,7 @@ This bundle includes assertion component & service. The component can be used on
 
 ```
 
-There's only two assertations, "callback" or "true". This is to avoid doing specific assertation methods (like for integer, regexp etc.). They're easy to do with these two basic assertations:
+There's only two assertations, "callback" or "true". This is to avoid doing too specific assertation methods (like for integer, regexp etc.). They're easy to do with "true" assertation:
 
 ```php
 <?php
@@ -101,13 +101,13 @@ There's only two assertations, "callback" or "true". This is to avoid doing spec
 ```
 
 Service methods:
-* assertCallback(callable $callback, array $callbackParameterArray, string $assertationMessage)
-* assertTrue(boolean $assertion, string $assertationMessage)
+* **assertCallback**(callable $callback, array $callbackParameterArray, string $assertationMessage)
+* **assertTrue**(boolean $assertion, string $assertationMessage)
+
+Service logs assertation exceptions into *%kernel.logs_dir%/assert.%kernel.environment%.log*.
 
 Equivalent component static methods:
-* callback(callable $callback, array $callbackParameterArray, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
-* true(boolean $assertion, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
+* **callback**(callable $callback, array $callbackParameterArray, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
+* **true**(boolean $assertion, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
 
-Optional LoggerInterface parameter takes a PSR-3 compatible logger.
-
-Logs are created in *%kernel.logs_dir%/assert.%kernel.environment%.log*.
+Component methods take an optional last parameter, which can be any PSR-3 compatible logger.
