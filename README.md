@@ -91,15 +91,12 @@ This bundle includes assertion component & service. The component can be used on
 
 ```
 
-There's only two assertations, "callback" or "true". This is to avoid doing specific assertation methods (like for integer, regexp etc.), because you can always do it yourself and just the way you like:
+There's only two assertations, "callback" or "true". This is to avoid doing specific assertation methods (like for integer, regexp etc.). They're easy to do with these two basic assertations:
 
 ```php
 <?php
-    $number = '10';
-    \Xi\Bundle\ErrorBundle\Component\Asserter::true(is_numeric('10'), $number . ' was not numeric');
+    \Xi\Bundle\ErrorBundle\Component\Asserter::true(is_numeric($number), $number . ' was not numeric');
 
-    $regexp = '/ex/';
-    $haystack = 'regexp';
     \Xi\Bundle\ErrorBundle\Component\Asserter::true(preg_match($regexp, $haystack), sprintf('"%s" did not match regexp "%s"', $haystack, $regexp));
 ```
 
