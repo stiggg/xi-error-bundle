@@ -40,14 +40,14 @@ Default Symfony2 logs have lots of other stuff, that does not help much with deb
 
 ## Exception message formatting
 
-During development, you want to see exactly what went wrong. In production on the other hand, you don't want to show the actual, possibly very detailed exception message. Exception message formatter component/service takes an exception, and returns the detailed or the general error message *depending on the current environment*. By default, the original exception message is intended to be shown to developer in **"test"** or **"dev"** environment, and end-user sees some more general error message in other environments.
+During development, you want to see exactly what went wrong. In production on the other hand, you don't want to show the actual, possibly very detailed exception message. Exception message formatter component/service takes an exception, and returns the original exception message or a general error message *depending on the current environment*. By default, the original exception message is intended to be shown to developer in **"test"** or **"dev"** environment, and end-user sees some more general error message in other environments.
 
 ```php
 <?php
-    ...
+    $message = 'Everything went better than expected.';
+
     try {
-        $this->em->persist($user);
-        $this->em->flush();
+        # try something dangerous
     } catch (Exception $e) {
         # use the service...
         $service = $this->get('xi_error.exception_formatter');
