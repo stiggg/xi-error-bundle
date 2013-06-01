@@ -9,12 +9,11 @@ This bundle requires:
 * Symfony >=2.1
 * Monolog >= 1.3
 
+Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since that's the first PSR-3 compatible version.
+
 Add to composer.json:
 
-    "monolog/monolog": ">=1.3.0",
     "xi/error-bundle": "dev-master"
-
-Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since that's the first PSR-3 compatible version.
 
 ## Exception logging
 
