@@ -37,6 +37,10 @@ Include XiErrorBundle in your AppKernel.php, and you get automatic exception log
 
 Default Symfony2 logs have lots of other stuff, that does not help much with debugging and log surveying process. This logger also includes stack traces for exceptions.
 
+### Does this handle errors->exception conversion?
+
+Since Symfony 2.2, errors are automatically converted to exceptions.
+
 ## Exception message formatting
 
 During development, you want to see exactly what went wrong. In production on the other hand, you don't want to show the actual, possibly very detailed exception message. Exception message formatter component/service takes an exception, and returns the original exception message or a general error message *depending on the current environment*. By default, the original exception message is intended to be shown to developer in **"test"** or **"dev"** environment, and end-user sees some more general error message in other environments.
