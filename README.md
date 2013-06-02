@@ -2,6 +2,8 @@
 
 This is a Symfony2 bundle for error and exception handling and logging. It also includes assertion component/service and component/service for formatting user readable exception messages according to environment.
 
+[![Build Status](https://travis-ci.org/xi-project/xi-error-bundle.png)](https://travis-ci.org/xi-project/xi-error-bundle)
+
 ## Installation
 
 This bundle requires:
