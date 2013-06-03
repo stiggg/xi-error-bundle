@@ -2,6 +2,8 @@
 
 This is a Symfony2 bundle for error and exception handling and logging. It also includes assertion component/service and component/service for formatting user readable exception messages according to environment.
 
+[![Build Status](https://travis-ci.org/xi-project/xi-error-bundle.png)](https://travis-ci.org/xi-project/xi-error-bundle)
+
 ## Installation
 
 This bundle requires:
@@ -9,12 +11,11 @@ This bundle requires:
 * Symfony >=2.1
 * Monolog >= 1.3
 
+Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since that's the first PSR-3 compatible version.
+
 Add to composer.json:
 
-    "monolog/monolog": ">=1.3.0",
     "xi/error-bundle": "dev-master"
-
-Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since that's the first PSR-3 compatible version.
 
 ## Exception logging
 
@@ -37,6 +38,10 @@ Include XiErrorBundle in your AppKernel.php, and you get automatic exception log
 ### Why use separate exception logging?
 
 Default Symfony2 logs have lots of other stuff, that does not help much with debugging and log surveying process. This logger also includes stack traces for exceptions.
+
+### Does this handle errors->exception conversion?
+
+Since Symfony 2.2, errors are automatically converted to exceptions.
 
 ## Exception message formatting
 
