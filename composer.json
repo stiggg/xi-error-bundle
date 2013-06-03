@@ -2,7 +2,7 @@
     "name": "xi/error-bundle",
     "type": "symfony-bundle",
     "description": "Error handling and assertion bundle for Symfony2",
-    "keywords": ["exception, error, assertion, bundle"],
+    "keywords": ["exception", "error", "assertion", "bundle"],
     "homepage": "http://github.com/xi-project/xi-error-bundle",
     "license": "BSD-3-Clause",
     "authors": [
