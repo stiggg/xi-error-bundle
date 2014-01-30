@@ -39,4 +39,20 @@ class ExceptionFormatterTest extends PHPUnit_Framework_TestCase
             )
         );
     }
+
+    /**
+     * @test
+     */
+    public function formatShortLogMessageShouldFormatNicely()
+    {
+        $e = new Exception('asdf');
+
+        $this->assertEquals(sprintf(
+            "exception '%s' with message '%s' in %s:%s",
+            get_class($e),
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine()
+        ), ExceptionFormatter::formatShortLogMessage($e));
+    }
 }

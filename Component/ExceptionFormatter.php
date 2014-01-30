@@ -35,4 +35,15 @@ class ExceptionFormatter
 
         return $defaultMessage;
     }
+
+    public static function formatShortLogMessage(Exception $e)
+    {
+        return sprintf(
+            "exception '%s' with message '%s' in %s:%s",
+            get_class($e),
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine()
+        );
+    }
 }
