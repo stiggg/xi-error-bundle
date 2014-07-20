@@ -1,6 +1,6 @@
 # xi-error-bundle
 
-This is a Symfony2 bundle for error and exception handling and logging. It also includes assertion component/service and component/service for formatting user readable exception messages according to environment.
+This is a Symfony2 bundle for error and exception handling and logging. It also includes component/service for formatting user readable exception messages according to environment.
 
 [![Build Status](https://travis-ci.org/xi-project/xi-error-bundle.png)](https://travis-ci.org/xi-project/xi-error-bundle)
 
@@ -15,7 +15,9 @@ Monolog 1.3 or greater and compatible Symfony Monolog bridge is required, since 
 
 Add to composer.json:
 
-    "xi/error-bundle": "dev-master"
+    "xi/error-bundle": "1.*"
+    
+See packagist for further versions: https://packagist.org/packages/xi/error-bundle
 
 ## Exception logging
 
@@ -45,7 +47,9 @@ Since Symfony 2.2, errors are automatically converted to exceptions.
 
 ## Exception message formatting
 
-During development, you want to see exactly what went wrong. In production on the other hand, you don't want to show the actual, possibly very detailed exception message. Exception message formatter component/service takes an exception, and returns the original exception message or a general error message *depending on the current environment*. By default, the original exception message is intended to be shown to developer in **"test"** or **"dev"** environment, and end-user sees some more general error message in other environments.
+During development, every bit of information helps with debugging the code as soon as errors happen. In production it is desirable to hide the actual, possibly very detailed exception message to the public, and show something generic instead. 
+
+Exception message formatter component/service takes an exception, and returns the original exception message or a general error message *depending on the current environment*. By default, the original exception message is intended to be shown to developer in **"test"** or **"dev"** environment, and end-user sees some more general error message in other environments.
 
 ```php
 <?php
@@ -69,50 +73,3 @@ During development, you want to see exactly what went wrong. In production on th
     return new Response($message);
     ...
 ```
-
-## Assertions
-
-*"Use assertions to document assumptions made in the code and to flush out unexpected conditions."* --Steve McConnell
-
-This bundle includes assertion component & service. The component can be used on it's own. The service wraps component and does automatic assertion logging. Assertation component throws exception when abnormal conditions are encountered.
-
-```php
-<?php
-
-    ...
-    $message = sprintf('failed asserting that "%s" is more than 9', $number);
-
-    # use the service with logging...
-    $service = $this->get('xi_error.asserter_service');
-    $service->assertCallback(function($number) {
-        return $number > 9 ? true : false;
-    }, array($number), $message);
-
-    # ...or the component directly, no logging
-    #\Xi\Bundle\ErrorBundle\Component\Asserter::true($number > 8, $message);
-
-    # continue as normal
-    ...
-
-```
-
-There's only two assertations, "callback" or "true". This is to avoid doing too specific assertation methods (like for integer, regexp etc.). They're easy to do with "true" assertation:
-
-```php
-<?php
-    \Xi\Bundle\ErrorBundle\Component\Asserter::true(is_numeric($number), $number . ' was not numeric');
-
-    \Xi\Bundle\ErrorBundle\Component\Asserter::true(preg_match($regexp, $haystack), sprintf('"%s" did not match regexp "%s"', $haystack, $regexp));
-```
-
-Service methods:
-* **assertCallback**(callable $callback, array $callbackParameterArray, string $assertationMessage)
-* **assertTrue**(boolean $assertion, string $assertationMessage)
-
-Service logs assertation exceptions into *%kernel.logs_dir%/assert.%kernel.environment%.log*.
-
-Equivalent component static methods:
-* **callback**(callable $callback, array $callbackParameterArray, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
-* **true**(boolean $assertion, string $assertationMessage[, \Psr\Log\LoggerInterface $logger])
-
-Component methods take an optional last parameter, which can be any PSR-3 compatible logger.
