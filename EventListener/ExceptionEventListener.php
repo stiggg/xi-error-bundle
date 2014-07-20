@@ -4,7 +4,6 @@ namespace Xi\Bundle\ErrorBundle\EventListener;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Xi\Bundle\ErrorBundle\Exception\AssertException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -45,11 +44,6 @@ class ExceptionEventListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
-
-        // stop assertation exception propagation
-        if ($exception instanceof AssertException) {
-            return;
-        }
 
         $this->logger->error($exception);
     }

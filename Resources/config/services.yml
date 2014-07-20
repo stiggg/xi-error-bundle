@@ -3,7 +3,6 @@ parameters:
     monolog.streamhandler.class: Monolog\Handler\StreamHandler
     xi_error.eventlistener.exception.class: Xi\Bundle\ErrorBundle\EventListener\ExceptionEventListener
     xi_error.exception_formatter.service.class: Xi\Bundle\ErrorBundle\Service\ExceptionFormatterService
-    xi_error.asserter.service.class: Xi\Bundle\ErrorBundle\Service\AsserterService
 
 services:
     xi_error.exception_logger:
@@ -21,20 +20,6 @@ services:
         arguments: [@xi_error.exception_logger, @kernel]
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
-
-    xi_error.assertion_logger:
-        class: %symfony.monolog.logger.class%
-        arguments: [app]
-        calls:
-            - [pushHandler, [@xi_error.assertion_logger_handler]]
-
-    xi_error.assertion_logger_handler:
-        class: %monolog.streamhandler.class%
-        arguments: [%kernel.logs_dir%/assert.%kernel.environment%.log, 200]
-
-    xi_error.asserter_service:
-        class: %xi_error.asserter.service.class%
-        arguments: [@xi_error.assertion_logger]
 
     xi_error.exception_formatter.service:
         class: %xi_error.exception_formatter.service.class%
